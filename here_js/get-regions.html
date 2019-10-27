@@ -1,0 +1,92 @@
+<link rel="stylesheet" type="text/css" href="//js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1549984893" />
+<script type="text/javascript" src="//js.api.here.com/v3/3.0/mapsjs-core.js"></script>
+<script type="text/javascript" src="//js.api.here.com/v3/3.0/mapsjs-service.js"></script>
+<script type="text/javascript" src="//js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
+<script type="text/javascript" src="//js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+		<script type="text/javascript" src="https://js.datalens.api.here.com/latest/mapsjs-datalens.js"></script>
+		<script type="text/javascript" src="https://js.datalens.api.here.com/latest/mapsjs-datalens.js"></script>
+		<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+
+<div id="here-map"></div>
+
+<script type="text/javascript" src="geohash.js"></script>
+
+<script type="text/javascript">
+const initHeatMap = (lat, lng) => {
+    let M = {
+       'Init' : {    // developer.here.com for app_id and app_code
+         'app_id':   'UdRH6PlISTlADYsW6mzl',
+         'app_code': 'lfrrTheP9nBedeJyy1NtIA',
+         useHTTPS: true
+       },
+       'Behavior' :    {},       // Управление событиями карты
+       'Container' :   {},       // Контейнер для отображения карты
+       'Lat' :         lat,   // Широта (центр карты)
+       'Lng' :        lng,   // Долгота (центр карты)
+       'Layers' :      {},       // Список картографических основ
+       'Map' :         {},       // Объект карты
+       'Platform' :    {},       // Платформа HERE API
+       'UI' :          {},       // Пользовательский интерфейс
+       'Zoom' :        12,        // 1 == весь мир, 15 == масштаб улицы
+
+    }
+
+    // Контейнер для отображения карты 
+    M.Container = document.querySelector('#here-map')
+      
+    // Инициализация платформы
+    M.Platform = new H.service.Platform(M.Init)
+      
+    // Список картографических основ
+    M.Layers = M.Platform.createDefaultLayers({lg:'rus'})
+
+
+    // Создание объекта карты 
+    M.Map = new H.Map(
+		M.Container, 
+		M.Layers.normal.map, {
+			center: {
+				lat: M.Lat, 
+				lng: M.Lng
+			},
+			zoom: M.Zoom
+		})
+      
+    // Добавление интерактивности
+    M.Behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(M.Map))
+      
+    // Пользовательский интерфейс
+    M.UI = H.ui.UI.createDefault(M.Map, M.Layers, 'ru-RU')
+
+    // Обработчик изменения размеров окна браузера
+    window.addEventListener('resize', () => {
+      M.Map.getViewPort().resize()
+    })
+
+    var group = new H.map.Group();
+    M.Map.addObject(group);
+    
+    fetch(`http://hackathon.tw1.ru/diseased/get-requests.php?completed=true`).then(res => {
+        return res.json();
+    }).then(json => {
+        for(let i in json.data) {
+            json.data[i].locationHash = decodeGeoHash(json.data[i].locationHash)
+            
+            let position;
+            let icon     = new H.map.DomIcon(`<div style="
+                box-shadow: 0 0 40px 10px blue;
+                width      : 1px;
+                height     : 1px;"></div>`);
+            position = {
+                lat: json.data[i].locationHash.latitude[2],
+                lng: json.data[i].locationHash.longitude[2]
+            };
+
+            let marker      = new H.map.DomMarker(position, {icon: icon});
+            group.addObject(marker);
+        }
+    });		
+}
+
+initHeatMap(45.01748600057393, 39.03051118469551);
+</script>

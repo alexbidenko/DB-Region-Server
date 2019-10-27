@@ -1,0 +1,31 @@
+{"data": 
+    [
+        {
+            "type"     : "care",
+            "text_ru"  : "Уход",
+            "documents": [
+                "education",
+                "medical_book"
+            ],
+            "score": 300
+        },
+        {
+            "type"     : "medication",
+            "text_ru"  : "Помощь с лекарствами",
+            "documents": [
+                "medical_education",
+                "no_conviction"
+            ],
+            "score": 700
+        },
+        {
+            "type"     : "purchases",
+            "text_ru"  : "Покупки в магазинах",
+            "documents": [
+                "strength",
+                "charisma"
+            ],
+            "score": 150
+        }
+    ]
+}

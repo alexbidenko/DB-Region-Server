@@ -1,0 +1,4 @@
+http://hackathon.tw1.ru/site-images/blood_drop_icon.svg
+http://hackathon.tw1.ru/site-images/blood_hospital_icon.svg
+http://hackathon.tw1.ru/site-images/blood_krest_icon.svg
+http://hackathon.tw1.ru/site-images/blood_like_icon.svg
